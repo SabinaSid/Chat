@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div>
+            <input id="text" type="text" placeholder="Input your message and press Enter">
+            <textarea id="chat" rows="10"></textarea>
+        </div>
+        <script>
+            let text=document.getElementById('text');
+            let chat=document.getElementById('chat');
+            let ws=new WebSocket('ws://localhost:500');
+
+            ws.onmessage=function(message){
+                chat.value=message.data+'\n'+chat.value;
+            };
+            ws.onopen=()=>{
+                text.addEventListener('keyup',(e=>{
+                    if (e.which === 13 && text.value){
+                        ws.send(text.value);
+                        text.value='';
+                    }
+                }));
+            };
+        </script>
+    </body>
+</html>
